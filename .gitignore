@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.turbo/
+.next/
+coverage/
+*.log
+
+# 環境變數：只提交 .env.example
+.env
+.env.*
+!.env.example
