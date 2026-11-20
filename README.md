@@ -56,13 +56,16 @@ cloudflared tunnel --url http://localhost:3000
 ## 檢查
 
 ```bash
-pnpm lint
+pnpm format:check   # Prettier（pnpm format 自動修正）
+pnpm lint           # ESLint（pnpm lint:fix 自動修正）
 pnpm typecheck
 pnpm test
 pnpm build
 ```
 
-GitHub Actions（`.github/workflows/ci.yml`）在每個 PR 和 main 都會跑這四項。
+GitHub Actions（`.github/workflows/ci.yml`）在每個 PR 和 main 都會跑這些檢查（另含 `pnpm audit` 安全檢查）。
+
+本機 commit 時 Husky 會跑 lint-staged（ESLint + Prettier），並用 commitlint 檢查訊息格式（Conventional Commits，例如 `feat: 新增行程查詢`）。
 
 ## 健康檢查
 

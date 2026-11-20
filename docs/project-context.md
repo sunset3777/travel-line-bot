@@ -55,20 +55,20 @@ Worker → 業務／客服通知（詢問單、轉真人摘要）
 
 ### 技術棧
 
-| 層         | 選擇                                                       |
-| ---------- | ---------------------------------------------------------- |
-| 語言       | TypeScript                                                 |
-| 後端 API   | Node.js + Express                                          |
-| 後台       | Payload CMS（Next.js）                                     |
-| 資料庫     | PostgreSQL + pgvector                                      |
-| 佇列與快取 | Redis + BullMQ（監控 Bull Board）                          |
-| LINE       | Messaging API、Rich Menu、Flex Message、LIFF               |
-| 地端 AI    | Mac（Apple Silicon）+ Ollama                               |
-| 雲端 AI    | Claude、GPT、Gemini 等                                     |
-| 圖片       | Cloudflare R2 或 AWS S3                                    |
-| 部署       | Docker Compose；Mac 用 Cloudflare Tunnel 或 Tailscale 連線 |
-| Monorepo   | pnpm workspaces + Turborepo                                |
-| 品質       | Biome（lint／format）、Vitest、zod（執行期驗證）           |
+| 層         | 選擇                                                                             |
+| ---------- | -------------------------------------------------------------------------------- |
+| 語言       | TypeScript                                                                       |
+| 後端 API   | Node.js + Express                                                                |
+| 後台       | Payload CMS（Next.js）                                                           |
+| 資料庫     | PostgreSQL + pgvector                                                            |
+| 佇列與快取 | Redis + BullMQ（監控 Bull Board）                                                |
+| LINE       | Messaging API、Rich Menu、Flex Message、LIFF                                     |
+| 地端 AI    | Mac（Apple Silicon）+ Ollama                                                     |
+| 雲端 AI    | Claude、GPT、Gemini 等                                                           |
+| 圖片       | Cloudflare R2 或 AWS S3                                                          |
+| 部署       | Docker Compose；Mac 用 Cloudflare Tunnel 或 Tailscale 連線                       |
+| Monorepo   | pnpm workspaces + Turborepo                                                      |
+| 品質       | ESLint + Prettier（lint／format）、commitlint + Husky、Vitest、zod（執行期驗證） |
 
 ### Monorepo 結構（規劃）
 
@@ -235,7 +235,7 @@ Demo 先省略：完整 CI/CD、Excel 匯入、報表、A/B 比較、自建客�
 
 ## 11. CI/CD 規劃
 
-- CI（每個 PR）：install → lint → typecheck → test → build
+- CI（每個 PR）：install → audit → format:check → lint → typecheck → test → build
 - CD（合併 main）：建 Docker image 推到 GHCR → SSH 主機 `docker compose pull` → `payload migrate` → `up -d` → `/health` 檢查
 - Rich Menu 設定寫成 JSON，用腳本透過 LINE API 建立
 - 金鑰放 GitHub Secrets；開發與正式用不同 LINE Channel

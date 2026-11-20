@@ -10,13 +10,14 @@
 pnpm install
 pnpm db:up          # 啟動 Postgres（pgvector）與 Redis
 pnpm dev            # 開發模式
-pnpm lint           # Biome
+pnpm lint           # ESLint
+pnpm format:check   # Prettier（pnpm format 自動修正）
 pnpm typecheck
 pnpm test           # Vitest
 pnpm build
 ```
 
-提交前 `pnpm lint && pnpm typecheck && pnpm test` 都要通過（CI 會跑同樣的檢查）。
+提交前 `pnpm format:check && pnpm lint && pnpm typecheck && pnpm test` 都要通過（CI 會跑同樣的檢查）。
 
 ## 結構
 
