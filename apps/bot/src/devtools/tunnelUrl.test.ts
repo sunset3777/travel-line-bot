@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { extractTunnelUrl, toWebhookUrl } from './tunnelUrl.js'
+import { extractTunnelUrl, isTunnelConnected, toWebhookUrl } from './tunnelUrl.js'
 
 describe('extractTunnelUrl', () => {
   it('從 cloudflared 的輸出框找出 Tunnel 網址', () => {
@@ -30,5 +30,19 @@ describe('toWebhookUrl', () => {
     expect(toWebhookUrl('https://a-b.trycloudflare.com/')).toBe(
       'https://a-b.trycloudflare.com/webhook',
     )
+  })
+})
+
+describe('isTunnelConnected', () => {
+  it('看到 Registered tunnel connection 代表 Tunnel 已連上', () => {
+    expect(
+      isTunnelConnected(
+        '2026-11-23T02:26:49Z INF Registered tunnel connection connIndex=0 location=tpe01',
+      ),
+    ).toBe(true)
+  })
+
+  it('建立網址的訊息還不算連上', () => {
+    expect(isTunnelConnected('INF |  Your quick Tunnel has been created! Visit it at')).toBe(false)
   })
 })

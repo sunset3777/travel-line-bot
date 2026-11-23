@@ -17,11 +17,15 @@
 2. 從 cloudflared 的輸出找出第一個 `https://<子網域>.trycloudflare.com` 網址。
    - 不可把 `https://api.trycloudflare.com`（cloudflared 內部 API）當成 Tunnel 網址。
    - 同一次執行只處理第一個找到的網址。
-3. Webhook URL = Tunnel 網址 + `/webhook`（網址結尾若有 `/` 先去掉）。
-4. 用 `.env` 的 `LINE_CHANNEL_ACCESS_TOKEN` 呼叫 Messaging API「Set webhook endpoint URL」。
-5. 呼叫「Test webhook endpoint」驗證。新網址的 DNS 可能要幾秒才生效，所以失敗時每 5 秒重試，最多 6 次。
+3. 等到 cloudflared 輸出 `Registered tunnel connection`（Tunnel 真正連上）才進行下一步。
+   太早送出時 LINE 連不到新網址，會回 `400 Invalid webhook endpoint URL`（2026-11-23 實測）。
+4. Webhook URL = Tunnel 網址 + `/webhook`（網址結尾若有 `/` 先去掉）。
+5. 用 `.env` 的 `LINE_CHANNEL_ACCESS_TOKEN` 呼叫 Messaging API「Set webhook endpoint URL」，
+   再呼叫「Test webhook endpoint」驗證。新網址的 DNS 可能要幾秒才生效，所以兩步驟任一失敗時，
+   每 5 秒從設定重新來過，最多 6 次。
    - 成功：印出 `✅ Webhook 已更新並驗證成功：<網址>`
-   - 全部失敗：印出最後一次的狀態碼與原因，並提醒確認 `pnpm dev` 有在跑。Tunnel 不關閉。
+   - 401：token 錯誤，不重試，提示檢查 `LINE_CHANNEL_ACCESS_TOKEN`。
+   - 全部失敗：印出最後一次的原因（LINE 回傳的訊息），並提醒確認 `pnpm dev` 有在跑。Tunnel 不關閉。
 6. cloudflared 的輸出照常顯示在終端機。按 Ctrl+C 時一併關閉 cloudflared。
 
 ## 不做
@@ -31,5 +35,5 @@
 
 ## 測試
 
-純函式 `extractTunnelUrl`、`toWebhookUrl` 用 Vitest 測試（`apps/bot/src/devtools/tunnelUrl.test.ts`）。
+純函式 `extractTunnelUrl`、`isTunnelConnected`、`toWebhookUrl` 用 Vitest 測試（`apps/bot/src/devtools/tunnelUrl.test.ts`）。
 呼叫 LINE API 與啟動子程序的部分不寫自動測試，以手動執行 `pnpm tunnel` 驗收。
