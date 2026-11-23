@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "turbo run dev",
+    "tunnel": "pnpm --filter @travel/bot tunnel",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
