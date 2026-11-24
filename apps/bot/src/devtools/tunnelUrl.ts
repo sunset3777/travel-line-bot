@@ -7,6 +7,11 @@ export function extractTunnelUrl(output: string): string | null {
   return output.match(TUNNEL_URL)?.[0] ?? null
 }
 
+/** cloudflared 印出這行代表 Tunnel 已真正連上，外部才連得到新網址 */
+export function isTunnelConnected(output: string): boolean {
+  return output.includes('Registered tunnel connection')
+}
+
 /** Tunnel 網址加上 Bot 的 Webhook 路徑 */
 export function toWebhookUrl(tunnelUrl: string): string {
   return `${tunnelUrl.replace(/\/+$/, '')}/webhook`
